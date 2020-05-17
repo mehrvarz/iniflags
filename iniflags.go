@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	allowUnknownFlags    = flag.Bool("allowUnknownFlags", false, "Don't terminate the app if ini file contains unknown flags.")
+	allowUnknownFlags    = flag.Bool("allowUnknownFlags", true, "Don't terminate the app if ini file contains unknown flags.")
 	allowMissingConfig   = flag.Bool("allowMissingConfig", false, "Don't terminate the app if the ini file cannot be read.")
 	config               = flag.String("config", "", "Path to ini config for using in go flags. May be relative to the current executable path.")
 	configUpdateInterval = flag.Duration("configUpdateInterval", 0, "Update interval for re-reading config file set via -config flag. Zero disables config file re-reading.")
@@ -165,8 +165,8 @@ func parseConfigFlags() (oldFlagValues map[string]string, ok bool) {
 	for _, arg := range parsedArgs {
 		f := flag.Lookup(arg.Key)
 		if f == nil {
-			logger.Printf("iniflags: unknown flag name=[%s] found at line [%d] of file [%s]", arg.Key, arg.LineNum, arg.FilePath)
 			if !*allowUnknownFlags {
+				logger.Printf("iniflags: unknown flag name=[%s] found at line [%d] of file [%s]", arg.Key, arg.LineNum, arg.FilePath)
 				ok = false
 			}
 			continue
